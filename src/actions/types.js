@@ -1,0 +1,4 @@
+const SET_POKEMONS = "SET_POKEMONS";
+const SET_ERROR = "SET_ERROR";
+
+export { SET_POKEMONS, SET_ERROR };
