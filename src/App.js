@@ -5,19 +5,20 @@ import Searcher from "./components/Searcher";
 import PokemonList from "./components/PokemonList";
 import PokemonSkeleton from "./components/PokemonSkeleton";
 import { getPokemons } from "./api";
-import { setPokemons, setError } from "./actions";
+import { setError, getPokemonsWithDetails } from "./actions";
 import logo from "./statics/logo.svg";
 import "./App.css";
 
 function App() {
-  const { pokemons, loading } = useSelector(state => state);
+  const pokemons = useSelector((state) => state.pokemons);
+  const loading = useSelector((state) => state.loading);
   const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchPokemons = async () => {
       try {
         const pokemonsRes = await getPokemons();
-        dispatch(setPokemons(pokemonsRes));
+        dispatch(getPokemonsWithDetails(pokemonsRes));
       } catch (error) {
         setError(true);
         console.error("Error fetching pokemons:", error);

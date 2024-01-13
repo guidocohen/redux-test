@@ -1,4 +1,4 @@
-import { SET_ERROR, SET_POKEMONS } from "../actions/types";
+import { SET_ERROR, SET_FAVORITE, SET_POKEMONS } from "../actions/types";
 
 const initialState = {
   pokemons: [],
@@ -12,6 +12,16 @@ export const pokemonsReducer = (state = initialState, action) => {
         ...state,
         pokemons: action.payload,
         loading: false,
+      };
+    case SET_FAVORITE:
+      const { pokemonId } = action.payload;
+      return {
+        ...state,
+        pokemons: state.pokemons.map((pokemon) =>
+          pokemon.id === pokemonId
+            ? { ...pokemon, favorite: !pokemon.favorite }
+            : pokemon
+        ),
       };
     case SET_ERROR:
       return {
