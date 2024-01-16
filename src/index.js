@@ -1,23 +1,37 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
-import {
-  applyMiddleware,
-  compose,
-  legacy_createStore as createStore,
-} from "redux";
-import { thunk } from "redux-thunk";
-import "./index.css";
-import App from "./App";
-import { pokemonsReducer } from "./reducers/pokemons";
+import { configureStore } from "@reduxjs/toolkit";
+import rootReducer from "./reducers/rootReducer";
 import { logger } from "./middlewares";
+import App from "./App";
+import { thunk } from "redux-thunk";
+
+
+const actionSanitizer = (action) =>
+  action.type === "FILE_DOWNLOAD_SUCCESS" && action.data
+    ? { ...action, data: "<<LONG_BLOB>>" }
+    : action;
+
+const stateSanitizer = (state) =>
+  state.data ? { ...state, data: "<<LONG_BLOB>>" } : state;
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
-const composeAlt = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-const composedEnhancers = composeAlt(applyMiddleware(thunk, logger));
+const isDevelopment = process.env.NODE_ENV === "development";
 
-const store = createStore(pokemonsReducer, composedEnhancers);
+const store = configureStore({
+  reducer: rootReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({ serializableCheck: !isDevelopment }).concat(
+      thunk,
+      logger
+    ),
+  devTools: {
+    actionSanitizer,
+    stateSanitizer,
+  },
+});
 
 root.render(
   <React.StrictMode>

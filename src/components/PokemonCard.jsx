@@ -3,9 +3,9 @@ import { Card } from "antd";
 import Meta from "antd/lib/card/Meta";
 import "./PokemonList.css";
 import StarButton from "./StarButton";
-import { setFavorite } from "../actions";
+import { setFavorite } from "../slices/pokemonsSlice";
 
-const PokemonCard = ({ name, image, types = [], id, favorite }) => {
+const PokemonCard = ({ name, image, types = [], id, isFavorite }) => {
   const dispatch = useDispatch();
 
   const handleOnFavorite = () => {
@@ -16,7 +16,7 @@ const PokemonCard = ({ name, image, types = [], id, favorite }) => {
     <Card
       title={name}
       cover={<img src={image} alt={name} />}
-      extra={<StarButton isFavorite={favorite} onClick={handleOnFavorite} />}
+      extra={<StarButton isFavorite={isFavorite} onClick={handleOnFavorite} />}
     >
       <Meta description={concatProperties(types)} />
     </Card>

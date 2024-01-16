@@ -1,7 +1,6 @@
 // Son funciones intermedias entre la request y el almacenamiento en el estado.
 
 export const logger = (store) => (next) => (action) => {
-  console.log(action);
   next(action);
 };
 

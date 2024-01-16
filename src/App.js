@@ -1,31 +1,20 @@
 import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { Col, Row } from "antd";
 import Searcher from "./components/Searcher";
 import PokemonList from "./components/PokemonList";
 import PokemonSkeleton from "./components/PokemonSkeleton";
-import { getPokemons } from "./api";
-import { setError, getPokemonsWithDetails } from "./actions";
 import logo from "./statics/logo.svg";
 import "./App.css";
+import { fetchPokemonsWithDetails } from "./slices/pokemonsSlice";
 
 function App() {
-  const pokemons = useSelector((state) => state.pokemons);
-  const loading = useSelector((state) => state.loading);
+  const pokemons = useSelector((state) => state.pokemons.pokemons, shallowEqual);
+  const loading = useSelector((state) => state.pokemons.loading);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const fetchPokemons = async () => {
-      try {
-        const pokemonsRes = await getPokemons();
-        dispatch(getPokemonsWithDetails(pokemonsRes));
-      } catch (error) {
-        setError(true);
-        console.error("Error fetching pokemons:", error);
-      }
-    };
-
-    fetchPokemons();
+    dispatch(fetchPokemonsWithDetails());
   }, []);
 
   return (
